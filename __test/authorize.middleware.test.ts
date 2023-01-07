@@ -14,11 +14,11 @@ describe("Authorize middleware", () => {
 		jest.restoreAllMocks();
 	})
 
-	it(`If a session variable is not present then send ${codes.UNAUTHORIZED}`, async () => {
+	it(`If a session variable is not present then send ${codes.UNAUTHORIZED.code}`, async () => {
 		authorizedUsersOnly(req, res, next);
 		expect(res.locals.session).toBeUndefined();
-		expect(res.send).toBeCalledWith({'message': 'UnAuthorized User'})
-		expect(res.status).toBeCalledWith(codes.UNAUTHORIZED)
+		expect(res.send).toBeCalledWith(codes.UNAUTHORIZED.response)
+		expect(res.status).toBeCalledWith(codes.UNAUTHORIZED.code)
 		expect(next).not.toBeCalled()
 	})
 
