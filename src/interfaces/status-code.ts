@@ -1,4 +1,5 @@
 export const codes = {
-	UNAUTHORIZED: 401
+	UNAUTHORIZED: 401,
+
 }
 
