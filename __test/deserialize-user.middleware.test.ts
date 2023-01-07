@@ -18,7 +18,7 @@ describe('Deserialize middleware ', () => {
 		getSessionById = jest.spyOn(SessionSer, 'getSessionById');
 	})
 
-	describe.skip('It should extract Authorization token', () => {
+	describe('It should extract Authorization token', () => {
 		it('check if authorization header', () => {
 			header.mockImplementation(() => '')
 			de.deserializeUser(req, res, next);
