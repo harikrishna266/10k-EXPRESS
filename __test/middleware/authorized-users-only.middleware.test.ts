@@ -1,6 +1,6 @@
-import {nextMock as next, reqMock as req, resMock as res} from "./reqMock";
-import {codes} from "../src/interfaces/status-code";
-import authorizedUsersOnly from "../src/middleware/authorized-users-only";
+import {nextMock as next, reqMock as req, resMock as res} from "../reqMock";
+import {codes} from "../../src/interfaces/status-code";
+import authorizedUsersOnly from "../../src/middleware/authorized-users-only";
 
 describe('Authorized users only | middleware ', () => {
 

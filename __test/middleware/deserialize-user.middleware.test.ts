@@ -1,9 +1,9 @@
-import {nextMock as next, reqMock as req, resMock as res} from "./reqMock";
-import {codes} from "../src/interfaces/status-code";
-import * as de from "../src/middleware/deserialize-user";
-import * as token from "../src/utils/jwt.util";
-import {verifyJwt} from "../src/utils/jwt.util";
-import * as SessionSer from "../src/service/session.service";
+import {nextMock as next, reqMock as req, resMock as res} from "../reqMock";
+import {codes} from "../../src/interfaces/status-code";
+import * as de from "../../src/middleware/deserialize-user";
+import * as token from "../../src/utils/jwt.util";
+import {verifyJwt} from "../../src/utils/jwt.util";
+import * as SessionSer from "../../src/service/session.service";
 
 describe('Deserialize middleware ', () => {
 

@@ -1,7 +1,8 @@
-import {NextFunction} from "express";
+import {NextFunction, Request, Response} from "express";
+import {formValidationError} from "../utils/error.response";
 
 
-export const validate = (schema: any) => (req: any, res: any, next: NextFunction) => {
+export const validate = (schema: any) => (req: Request, res: Response, next: NextFunction) => {
 	try {
 		schema.parse({
 			body: req.body,
@@ -10,7 +11,7 @@ export const validate = (schema: any) => (req: any, res: any, next: NextFunction
 		});
 		next();
 	} catch (e: any) {
-		return res.status(400).send(e.errors);
+		return formValidationError(res, e.errors);
 	}
 }
 

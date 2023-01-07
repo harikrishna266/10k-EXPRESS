@@ -1,6 +1,6 @@
-import {bootstrap} from "../src/utils/server";
+import {bootstrap} from "../../src/utils/server";
 import supertest from "supertest";
-import {codes} from "../src/interfaces/status-code";
+import {codes} from "../../src/interfaces/status-code";
 
 const {app, ...methods} = bootstrap()
 methods.addRoutes(app);

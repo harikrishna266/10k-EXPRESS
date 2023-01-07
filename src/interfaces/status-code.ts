@@ -4,5 +4,10 @@ export const codes = {
 		response : {"message": "UnAuthorized User"}
 	},
 
+	FORM_VALIDATION_ERRORS: {
+		code: 400,
+		response : {}
+	},
+
 }
 
