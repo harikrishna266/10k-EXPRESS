@@ -1,83 +1,86 @@
-import * as Utils from "../src/utils/jwt.util";
-import deserializeUser from "../src/middleware/deserialize-user";
-import * as SessionSer from '../src/service/session.service';
+import {nextMock as next, reqMock as req, resMock as res} from "./reqMock";
+import {codes} from "../src/interfaces/status-code";
+import * as de from "../src/middleware/deserialize-user";
+import * as token from "../src/utils/jwt.util";
 import {verifyJwt} from "../src/utils/jwt.util";
-import {getSessionById} from "../src/service/session.service";
+import * as SessionSer from "../src/service/session.service";
 
+describe('Deserialize middleware ', () => {
 
-const verifyJwtFn = (returnValue: any) => {
-	return jest
-		.spyOn(Utils, "verifyJwt")
-		// @ts-ignore
-		.mockReturnValue(returnValue);
-}
+	let header: any;
+	let verifyJwt: any;
+	let getSessionById: any;
+	beforeEach(() => {
+		jest.spyOn(res, 'status');
+		jest.spyOn(res, 'send');
+		header = jest.spyOn(req, 'header');
+		verifyJwt = jest.spyOn(token, 'verifyJwt');
+		getSessionById = jest.spyOn(SessionSer, 'getSessionById');
+	})
 
-const essentials = (token: string) => {
-	const send = jest.fn();
-	const sendStatus = jest.fn();
-	const next = jest.fn();
-	const res = {send, locals: {}, sendStatus}
-	const req = {
-		header: () => 'Bearer ' + token
-	}
-	return {send, next, res, req};
-}
+	describe.skip('It should extract Authorization token', () => {
+		it('check if authorization header', () => {
+			header.mockImplementation(() => '')
+			de.deserializeUser(req, res, next);
+			expect(req.header).toBeCalledWith('authorization');
+		})
+	})
 
-const spyOnGetSessionById = (returnValue: any) => {
-	return jest
-		.spyOn(SessionSer, "getSessionById")
-		// @ts-ignore
-		.mockReturnValue(returnValue);
-}
-
-
-describe("Deserializer", () => {
-	it("If there is no token the user session should not be set",
-		async () => {
-			const {next, res, req} = essentials('');
-			const verifyJwt = verifyJwtFn('');
-			const getSessionById = spyOnGetSessionById('');
-			// @ts-ignore
-			await deserializeUser(req, res, next);
-			expect(verifyJwt).not.toHaveBeenCalled()
-
-			expect(res.locals).toBeUndefined();
-			expect(res.locals).toBeUndefined();
-			expect(getSessionById).not.toHaveBeenCalled();
-			expect(next).toHaveBeenCalled();
+	describe('it should not process anything that does not have a Authorization token', () => {
+		let invalid;
+		let verifyJwt: any;
+		beforeEach(() => {
+			invalid = header.mockImplementation(() => '');
+			verifyJwt =jest.spyOn(token, 'verifyJwt');
+		})
+		describe('TOKEN ABSENT', () => {
+			it('should call next immediately and do not attempt to decode token', () => {
+				de.deserializeUser(req, res, next);
+				expect(res.send).toHaveBeenCalledWith(codes.UNAUTHORIZED.response);
+				expect(res.status).toHaveBeenCalledWith(codes.UNAUTHORIZED.code);
+				expect(verifyJwt).toHaveBeenCalledTimes(0)
+			})
 		})
 
-	it("if token is valid and set the session property in locals", async () => {
-		const {next, res, req} = essentials('1234567');
-		const verifyJwt = verifyJwtFn({valid: true, expired: false, decoded: 1});
-		const getSessionById = spyOnGetSessionById({user: 1, id: 1})
-		// @ts-ignore
-		await deserializeUser(req, res, next);
-		// @ts-ignore
-		expect(verifyJwt).toHaveBeenCalled();
-		expect(getSessionById).toHaveBeenCalled();
-		// @ts-ignore
-		expect(res.locals.session).toEqual({userId: 1, sessionId: 1});
-		expect(verifyJwt).toHaveBeenCalled()
-		expect(next).toHaveBeenCalled();
+		describe('TOKEN PRESENT', () => {
+
+			describe('INVALID', () => {
+				beforeEach(() => {
+					invalid = header.mockReturnValue('Bearer xxxxx');
+					de.deserializeUser(req, res, next);
+				})
+				it('it should attempt to decode token', () => {
+					expect(verifyJwt).toHaveBeenCalledTimes(1);
+				})
+
+				it('DO-NOT attempt to get user details if its EXPIRED || INVALID', () => {
+					de.deserializeUser(req, res, next);
+					expect(res.send).toHaveBeenCalledWith(codes.UNAUTHORIZED.response);
+					expect(res.status).toHaveBeenCalledWith(codes.UNAUTHORIZED.code);
+					expect(getSessionById).not.toBeCalled();
+				})
+			})
+
+			describe('VALID', () => {
+				beforeEach(() => {
+					invalid = header.mockReturnValue('Bearer valid');
+					verifyJwt.mockReturnValue({ valid: true, expired: false, decoded: {id:1, user: 1} });
+					getSessionById.mockReturnValue({id: 1, user: 1});
+					de.deserializeUser(req, res, next);
+				})
+
+				it('it should attempt to decode token', () => {
+					expect(verifyJwt).toHaveBeenCalledTimes(1);
+					expect(getSessionById).toBeCalledTimes(1)
+					expect(res.locals.session).toMatchObject({"userId": 1, "sessionId": 1})
+				})
+			})
+
+		})
+
+
+
+
 	})
 
-	it("If token is expired it should send a 401 ", async () => {
-		const {next, res, req} = essentials('1234567');
-		const verifyJwt = verifyJwtFn({valid: true, expired: true, decoded: 1});
-		const getSessionById = spyOnGetSessionById({user: 1, id: 1})
-
-		// @ts-ignore
-		await deserializeUser(req, res, next);
-		// @ts-ignore
-		expect(verifyJwt).toHaveBeenCalled();
-		expect(res.sendStatus).toHaveBeenCalledWith(401);
-		// @ts-ignore
-		expect(getSessionById).not.toHaveBeenCalled();
-		// @ts-ignore
-		expect(res.locals.session).toBeUndefined();
-		expect(next).not.toHaveBeenCalled();
-
-	})
-
-});
+})

@@ -1,5 +1,8 @@
 export const codes = {
-	UNAUTHORIZED: 401,
+	UNAUTHORIZED: {
+		code: 401,
+		response : {"message": "UnAuthorized User"}
+	},
 
 }
 

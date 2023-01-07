@@ -2,7 +2,7 @@ import express from "express";
 
 //middlewares
 import * as validator from "../middleware/validate-resources";
-import deserializeUser from "../middleware/deserialize-user";
+import * as  de from "../middleware/deserialize-user";
 import authorizedUsersOnly from "../middleware/authorized-users-only";
 import {fileFilter, storage} from "../middleware/upload-image";
 
@@ -27,7 +27,7 @@ v1.post('/login', validator.validate(ZodUserLoginSchema), sessionCont.login);
 
 v1.post('/refresh-token',  sessionCont.generateNewToken);
 
-v1.use(deserializeUser);
+v1.use(de.deserializeUser);
 
 v1.get('/user/details', [authorizedUsersOnly], userCont.getUserDetails);
 v1.post('/user/logout', [authorizedUsersOnly], sessionCont.deleteSession);

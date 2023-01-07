@@ -19,7 +19,7 @@ export const resMock = {
 
 //@ts-ignore
 export const  reqMock = {
-
+	header: jest.fn
 } as Request
 
 export const nextMock = jest.fn() as NextFunction

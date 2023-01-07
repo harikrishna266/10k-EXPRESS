@@ -1,20 +1,20 @@
 import {get} from "lodash";
 import {NextFunction, Request, Response} from "express";
-import {verifyJwt} from "../utils/jwt.util";
 import * as SessionSer from '../service/session.service';
 import {HydratedDocument} from "mongoose";
 import {ISessionDocument} from "../interfaces/session.interface";
+import {verifyJwt} from "../utils/jwt.util";
+import {unauthorized} from "../utils/error.response";
 
-async function deserializeUser(req: Request, res: Response, next: NextFunction) {
+export async function deserializeUser(req: Request, res: Response, next: NextFunction) {
 	const accessToken = (req.header('authorization') || '').replace(/Bearer\s/, "");
-
 	if (!accessToken) {
-		return next();
+		return unauthorized(res);
 	}
 
 	const {decoded, expired, valid} = verifyJwt(accessToken, { 	algorithm: 'RS256' });
 	if (expired || !valid) {
-		return res.sendStatus(401);
+		return unauthorized(res);
 	}
 
 	if (decoded) {
@@ -26,5 +26,3 @@ async function deserializeUser(req: Request, res: Response, next: NextFunction) 
 	}
 	return next();
 }
-
-export default deserializeUser;
