@@ -1,5 +1,6 @@
 import {NextFunction, Request, Response} from "express";
-import {formValidationError} from "../utils/error.response";
+import {FormValidationError} from "../utils/error-handler/error.classes";
+
 
 
 export const validate = (schema: any) => (req: Request, res: Response, next: NextFunction) => {
@@ -11,7 +12,7 @@ export const validate = (schema: any) => (req: Request, res: Response, next: Nex
 		});
 		next();
 	} catch (e: any) {
-		return formValidationError(res, e.errors);
+		throw new FormValidationError(e.message)
 	}
 }
 

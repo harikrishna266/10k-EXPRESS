@@ -4,17 +4,17 @@ import * as SessionSer from '../service/session.service';
 import {HydratedDocument} from "mongoose";
 import {ISessionDocument} from "../interfaces/session.interface";
 import {verifyJwt} from "../utils/jwt.util";
-import {unauthorized} from "../utils/error.response";
+import {UnAuthorized} from "../utils/error-handler/error.classes";
 
 export async function deserializeUser(req: Request, res: Response, next: NextFunction) {
 	const accessToken = (req.header('authorization') || '').replace(/Bearer\s/, "");
 	if (!accessToken) {
-		return unauthorized(res);
+		return next(new UnAuthorized({message: 'Invalid token'}));
 	}
 
-	const {decoded, expired, valid} = verifyJwt(accessToken, { 	algorithm: 'RS256' });
+	const {decoded, expired, valid} = verifyJwt(accessToken, {algorithm: 'RS256'});
 	if (expired || !valid) {
-		return unauthorized(res);
+		return next(new UnAuthorized({message: 'Expired Token'}));
 	}
 
 	if (decoded) {
@@ -23,6 +23,10 @@ export async function deserializeUser(req: Request, res: Response, next: NextFun
 		if (session) {
 			res.locals.session = {userId: session.user, sessionId: session.id};
 		}
+	} else {
+		return next(new UnAuthorized({message: 'Not able to decode token'}));
 	}
 	return next();
+
+
 }

@@ -6,7 +6,7 @@ export async function createUser(req: Request, res: Response, next: NextFunction
 		const {_id, email, name} = await userSer.createNewUser(req.body);
 		return res.send({_id, email, name});
 	} catch (e: any) {
-		next(e.message);
+		next(e);
 	}
 }
 
@@ -16,6 +16,6 @@ export async function getUserDetails(req: Request, res: Response, next: NextFunc
  		const user = await userSer.getUserDetails(res.locals.session.userId);
 		return res.status(200).send(user);
 	} catch (e: any) {
-		next(e.meesage);
+		next(e.message);
 	}
 }

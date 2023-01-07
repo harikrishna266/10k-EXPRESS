@@ -6,7 +6,7 @@ import {startListening} from "./listen";
 import path from "path";
 import {addCors} from "./cors";
 import {addBodyParser} from "./bodyparser";
-import {globalErrorHandler} from "./error";
+import {globalErrorHandler} from "../middleware/error";
 
 
 export function addHealthCheckApi(app: Express) {

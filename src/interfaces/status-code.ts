@@ -1,3 +1,6 @@
+import {util} from "zod";
+import objectKeys = util.objectKeys;
+
 export const codes = {
 	UNAUTHORIZED: {
 		code: 401,
@@ -9,5 +12,11 @@ export const codes = {
 		response : {}
 	},
 
+	CONFLICT_ERROR: {
+		code: 409,
+		response : {}
+	}
+
 }
+
 

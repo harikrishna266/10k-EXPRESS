@@ -3,6 +3,7 @@ import supertest from "supertest";
 import {MongoMemoryServer} from "mongodb-memory-server";
 
 import mongoose from "mongoose";
+import {codes} from "../src/interfaces/status-code";
 
 
 const {app, ...methods} = bootstrap()
@@ -24,14 +25,14 @@ describe('User Login and Registration using mongo memory', () => {
 
 	describe('Registration form validation', () => {
 		it('An error should be throw if form values are not valid', async () => {
-			const test = await supertest(app).post('/v1/register').send({}).expect(400);
+			const test = await supertest(app).post('/v1/register').send({}).expect(codes.FORM_VALIDATION_ERRORS.code);
 			expect(test.body.length).toBe(4); // gives an array of 2 error
 		})
 	})
 
 	describe('Login form validation', () => {
 		it('An error should be throw if form values are not valid', async () => {
-			const test = await supertest(app).post('/v1/login',).send({}).expect(400);
+			const test = await supertest(app).post('/v1/login').send({}).expect(codes.FORM_VALIDATION_ERRORS.code);
 			expect(test.body.length).toBe(2); // gives an array of 2 error
 		})
 	})
@@ -52,11 +53,11 @@ describe('User Login and Registration using mongo memory', () => {
 				email: 'admin@gmail.com',
 				password: '123123',
 				name: 'hari',
-				confirm_password: '123123'}).expect(500);
+				confirm_password: '123123'}).expect(codes.CONFLICT_ERROR.code);
 		})
 	})
-	//
-	describe('Should be able to login', () => {
+
+ 	describe('Should be able to login', () => {
 		it('When a valid username and password is given, it should return 200 ok and respond with access token and refresh token', async () => {
 			const test = await supertest(app).post('/v1/login', ).send({email: 'admin@gmail.com', password: '123123'}).expect(200);
 			 expect(test.body).toHaveProperty('accessToken');
