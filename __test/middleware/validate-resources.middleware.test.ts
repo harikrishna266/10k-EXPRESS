@@ -1,7 +1,7 @@
 import  * as validator from "../../src/middleware/validate-resources";
 import {nextMock as next, reqMock as req, resMock as res} from "../reqMock";
 import {NextFunction, Request, Response} from "express";
-import {codes} from "../../src/interfaces/status-code";
+import {FormValidationError} from "../../src/utils/error-handler/error.classes";
 
 const schema = {
 	parse: jest.fn()
@@ -16,14 +16,12 @@ describe("Validate Resources middleware", () => {
 	describe("INVALID", () => {
 		let error: any;
 		beforeEach(() => {
-			error = jest.spyOn(schema, 'parse').mockImplementation(() =>  {throw new Error('errors')});
+			error = jest.spyOn(schema, 'parse').mockImplementation(() =>  {throw new Error(JSON.stringify([]))});
 		})
 
 		it('throw form validation error' , () =>{
 			validator.validate(schema)(req, res, next);
-			expect(res.status).toHaveBeenCalledWith(codes.FORM_VALIDATION_ERRORS.code);
-			expect(res.send).toHaveBeenCalledTimes(1);
-			expect(next).not.toHaveBeenCalled();
+			expect(next).toHaveBeenCalledWith(new FormValidationError(JSON.stringify([])));
 		})
 
 	})

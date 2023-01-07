@@ -1,7 +1,6 @@
 import UserModel from "../models/user.model";
 import mongoose, {HydratedDocument} from "mongoose";
 import {IUser, IUserDocument} from "../interfaces/user.interface";
-import {codes} from "../interfaces/status-code";
 
 export async function createNewUser(user:  Omit<IUser, "createdAt"| "updateAt" | "_id">) {
 	try {
@@ -22,7 +21,7 @@ export async function validatePassword({email, password} : {email: string, passw
 			return false;
 		}
 		return user;
-	}catch(e) {
+	}catch(e: any) {
 		throw new Error(e.message);
 	}
 }

@@ -12,7 +12,7 @@ export const validate = (schema: any) => (req: Request, res: Response, next: Nex
 		});
 		next();
 	} catch (e: any) {
-		throw new FormValidationError(e.message)
+		next(new FormValidationError(e.message));
 	}
 }
 

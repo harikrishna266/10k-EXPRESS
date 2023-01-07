@@ -1,10 +1,5 @@
-import {Response} from "express";
-import {codes} from "../../interfaces/status-code";
 import {BaseError, CODES} from "./error.interface";
 
-export function unauthorized(res: Response) {
-	return res.status(codes.UNAUTHORIZED.code).send(codes.UNAUTHORIZED.response);
-}
 
 export class FormValidationError implements BaseError {
 	httpStatus: CODES = 'BAD_REQUEST';

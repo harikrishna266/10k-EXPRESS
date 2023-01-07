@@ -1,9 +1,10 @@
 import {nextMock as next, reqMock as req, resMock as res} from "../reqMock";
-import {codes} from "../../src/interfaces/status-code";
 import * as de from "../../src/middleware/deserialize-user";
 import * as token from "../../src/utils/jwt.util";
 import {verifyJwt} from "../../src/utils/jwt.util";
 import * as SessionSer from "../../src/service/session.service";
+import {STATUS_CODES} from "http";
+import {UnAuthorized} from "../../src/utils/error-handler/error.classes";
 
 describe('Deserialize middleware ', () => {
 
@@ -36,9 +37,7 @@ describe('Deserialize middleware ', () => {
 		describe('TOKEN ABSENT', () => {
 			it('should call next immediately and do not attempt to decode token', () => {
 				de.deserializeUser(req, res, next);
-				expect(res.send).toHaveBeenCalledWith(codes.UNAUTHORIZED.response);
-				expect(res.status).toHaveBeenCalledWith(codes.UNAUTHORIZED.code);
-				expect(verifyJwt).toHaveBeenCalledTimes(0)
+				expect(next).toBeCalledWith(new UnAuthorized());
 			})
 		})
 
@@ -55,8 +54,7 @@ describe('Deserialize middleware ', () => {
 
 				it('DO-NOT attempt to get user details if its EXPIRED || INVALID', () => {
 					de.deserializeUser(req, res, next);
-					expect(res.send).toHaveBeenCalledWith(codes.UNAUTHORIZED.response);
-					expect(res.status).toHaveBeenCalledWith(codes.UNAUTHORIZED.code);
+					expect(next).toBeCalledWith(new UnAuthorized());
 					expect(getSessionById).not.toBeCalled();
 				})
 			})

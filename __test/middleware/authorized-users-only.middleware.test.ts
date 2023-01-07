@@ -1,6 +1,7 @@
 import {nextMock as next, reqMock as req, resMock as res} from "../reqMock";
-import {codes} from "../../src/interfaces/status-code";
 import authorizedUsersOnly from "../../src/middleware/authorized-users-only";
+import {STATUS_CODES} from "../../src/utils/error-handler/error.interface";
+import {UnAuthorized} from "../../src/utils/error-handler/error.classes";
 
 describe('Authorized users only | middleware ', () => {
 
@@ -19,9 +20,7 @@ describe('Authorized users only | middleware ', () => {
 			})
 			it('Should send unauthorized', () => {
 				expect(res.locals.session).toBeUndefined();
-				expect(res.send).toBeCalledWith(codes.UNAUTHORIZED.response)
-				expect(res.status).toBeCalledWith(codes.UNAUTHORIZED.code)
-				expect(next).not.toBeCalled()
+				expect(next).toBeCalledWith(new UnAuthorized())
 			})
 		})
 		describe('PRESENT', () => {
@@ -31,8 +30,8 @@ describe('Authorized users only | middleware ', () => {
 			})
 			it('Should send unauthorized', () => {
 				expect(res.locals.session).toBeDefined();
-				expect(res.send).not.toBeCalledWith(codes.UNAUTHORIZED.response)
-				expect(res.status).not.toBeCalledWith(codes.UNAUTHORIZED.code)
+				expect(res.send).not.toBeCalledWith(STATUS_CODES.UNAUTHORIZED)
+				expect(res.status).not.toBeCalledWith(STATUS_CODES.UNAUTHORIZED)
 				expect(next).toBeCalled()
 			})
 		})

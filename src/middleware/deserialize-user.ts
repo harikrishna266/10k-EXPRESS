@@ -9,12 +9,12 @@ import {UnAuthorized} from "../utils/error-handler/error.classes";
 export async function deserializeUser(req: Request, res: Response, next: NextFunction) {
 	const accessToken = (req.header('authorization') || '').replace(/Bearer\s/, "");
 	if (!accessToken) {
-		return next(new UnAuthorized({message: 'Invalid token'}));
+		return next(new UnAuthorized());
 	}
 
 	const {decoded, expired, valid} = verifyJwt(accessToken, {algorithm: 'RS256'});
 	if (expired || !valid) {
-		return next(new UnAuthorized({message: 'Expired Token'}));
+		return next(new UnAuthorized());
 	}
 
 	if (decoded) {
