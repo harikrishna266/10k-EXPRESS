@@ -19,10 +19,9 @@ export async function login(req: Request<{}, { email: string, password: string }
 
 		const session = await sessionSer.createSession(user._id, req.get('user-agent') || '') as  HydratedDocument<ISessionDocument>;
 		const tokenInfo = {userId: user.id, session_id :session._id};
-		const options = { expiresIn: '10m' };
-		const refreshTokenOptions = { expiresIn: '365d' };
-		const accessToken = signJwt(tokenInfo,  options);
-		const refreshToken = signJwt(tokenInfo,  refreshTokenOptions);
+
+		const accessToken = signJwt(tokenInfo,  {expiresIn: '10m', algorithm: 'RS256'});
+		const refreshToken = signJwt(tokenInfo,  {expiresIn: '365d', algorithm: 'RS256'});
 		return res.send({ accessToken, refreshToken });
 
 	} catch (e: any) {
@@ -33,7 +32,7 @@ export async function login(req: Request<{}, { email: string, password: string }
 export async function generateNewToken(req: Request<{}, { email: string, password: string }>, res: Response, next: NextFunction) {
 	try {
 		const refreshToken = (req.header('x-refresh') || '') as string
-		const {valid, expired, decoded}  = verifyJwt(refreshToken);
+		const {valid, expired, decoded}  = verifyJwt(refreshToken, { algorithm: 'RS256'});
 		if (!expired && valid) {
 			const session = await sessionSer.getSessionById(decoded.session_id) as  HydratedDocument<ISessionDocument>; // check if the session id is valid and of so take the user.
 			if(decoded.userId.toString() === session.user.toString() ) {

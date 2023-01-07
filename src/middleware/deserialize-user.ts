@@ -12,7 +12,7 @@ async function deserializeUser(req: Request, res: Response, next: NextFunction) 
 		return next();
 	}
 
-	const {decoded, expired, valid} = verifyJwt(accessToken);
+	const {decoded, expired, valid} = verifyJwt(accessToken, { 	algorithm: 'RS256' });
 	if (expired || !valid) {
 		return res.sendStatus(401);
 	}

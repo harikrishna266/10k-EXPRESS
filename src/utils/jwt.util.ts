@@ -4,17 +4,20 @@ dotenv.config();
 
 
 export function signJwt(data: any, options: jwt.SignOptions) {
-  	return jwt.sign({data}, process.env.ACCESS_TOKEN_PRIVATE_KEY as string, options, );
+	const buffer = Buffer.from(process.env.ACCESS_TOKEN_PRIVATE_KEY as string,  'base64')
+	let key = buffer.toString('ascii');
+	return jwt.sign(data, key,  options);
 }
 
-export function verifyJwt(token: string) {
-
+export function verifyJwt(token: string,  options: jwt.SignOptions) {
+ 	const buffer = Buffer.from(process.env.ACCESS_TOKEN_PUBLIC_KEY as string,  'base64')
+	let key = buffer.toString('ascii');
 	try {
-		const decoded: any = jwt.verify(token, process.env.ACCESS_TOKEN_PRIVATE_KEY as string);
+		const decoded: any = jwt.verify(token, key,  options, );
 		return {
 			valid: true,
 			expired: false,
-			decoded: decoded.data,
+			decoded: decoded,
 		};
 	} catch (e: any) {
 		return {
