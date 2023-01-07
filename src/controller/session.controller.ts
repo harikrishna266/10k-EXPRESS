@@ -2,10 +2,9 @@ import {NextFunction, Response, Request} from "express";
 import * as sessionSer from "../service/session.service";
 import * as userSer from "../service/user.service";
 import {signJwt, verifyJwt} from "../utils/jwt.util";
-import {ISession, ISessionDocument} from "../models/session.model";
-import mongoose, {HydratedDocument} from "mongoose";
+import {ISessionDocument} from "../models/session.model";
+import  {HydratedDocument} from "mongoose";
 import {IUserDocument} from "../interfaces/user.interface";
-import {get} from "lodash";
 
 
 export async function login(req: Request<{}, { email: string, password: string }>, res: Response, next: NextFunction) {
@@ -19,7 +18,6 @@ export async function login(req: Request<{}, { email: string, password: string }
 
 		const session = await sessionSer.createSession(user._id, req.get('user-agent') || '') as  HydratedDocument<ISessionDocument>;
 		const tokenInfo = {userId: user.id, session_id :session._id};
-
 		const accessToken = signJwt(tokenInfo,  {expiresIn: '10m', algorithm: 'RS256'});
 		const refreshToken = signJwt(tokenInfo,  {expiresIn: '365d', algorithm: 'RS256'});
 		return res.send({ accessToken, refreshToken });
