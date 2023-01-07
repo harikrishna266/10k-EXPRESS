@@ -1,7 +1,5 @@
 import SessionModel, {ISessionDocument} from "../models/session.model";
 import mongoose, {HydratedDocument} from "mongoose";
-import {verifyJwt} from "../utils/jwt.util";
-import {get} from "lodash";
 
 export async function createSession(user: typeof mongoose.Types.ObjectId, userAgent: string) {
 	try {

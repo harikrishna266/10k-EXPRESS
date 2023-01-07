@@ -1,13 +1,6 @@
 import UserModel from "../models/user.model";
 import mongoose, {HydratedDocument} from "mongoose";
 import {IUser, IUserDocument} from "../interfaces/user.interface";
-import exp from "constants";
-import {verifyJwt} from "../utils/jwt.util";
-import SessionModel, {ISession} from "../models/session.model";
-import {ISessionDocument} from "../interfaces/session.interface";
-import * as SessionSer from "./session.service";
-import {get} from "lodash";
-
 
 export async function createNewUser(user:  Omit<IUser, "createdAt"| "updateAt" | "_id">) {
 	try {
