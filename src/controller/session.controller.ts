@@ -18,8 +18,8 @@ export async function login(req: Request<{}, { email: string, password: string }
 
 		const session = await sessionSer.createSession(user._id, req.get('user-agent') || '') as  HydratedDocument<ISessionDocument>;
 		const tokenInfo = {userId: user.id, session_id :session._id};
-		const accessToken = signJwt(tokenInfo,  {expiresIn: '10m', algorithm: 'RS256'});
-		const refreshToken = signJwt(tokenInfo,  {expiresIn: '365d', algorithm: 'RS256'});
+		const accessToken = signJwt(tokenInfo,  {expiresIn: process.env.ACCESS_TOKEN_TTL, algorithm: 'RS256'});
+		const refreshToken = signJwt(tokenInfo,  {expiresIn: process.env.REFRESH_TOKEN_TTL, algorithm: 'RS256'});
 		return res.send({ accessToken, refreshToken });
 
 	} catch (e: any) {
@@ -27,7 +27,7 @@ export async function login(req: Request<{}, { email: string, password: string }
 	}
 }
 
-export async function generateNewToken(req: Request<{}, { email: string, password: string }>, res: Response, next: NextFunction) {
+export async function generateNewToken(req: Request<{}, { email: string, password: string }>, res: Response) {
 	try {
 		const refreshToken = (req.header('x-refresh') || '') as string
 		const {valid, expired, decoded}  = verifyJwt(refreshToken, { algorithm: 'RS256'});
@@ -35,7 +35,7 @@ export async function generateNewToken(req: Request<{}, { email: string, passwor
 			const session = await sessionSer.getSessionById(decoded.session_id) as  HydratedDocument<ISessionDocument>; // check if the session id is valid and of so take the user.
 			if(decoded.userId.toString() === session.user.toString() ) {
 				const tokenInfo = {userId: decoded.userId.toString(), session_id : session._id.toString()};
-				const options = { expiresIn: '10m' };
+				const options = { expiresIn:  process.env.ACCESS_TOKEN_TTL };
 				const accessToken = signJwt(tokenInfo, options);
 				return res.send({accessToken: accessToken}).status(200);
 			}

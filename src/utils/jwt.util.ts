@@ -4,13 +4,13 @@ dotenv.config();
 
 
 export function signJwt(data: any, options: jwt.SignOptions) {
-	const buffer = Buffer.from(process.env.ACCESS_TOKEN_PRIVATE_KEY as string,  'base64')
+	const buffer = Buffer.from(process.env.PRIVATE_KEY as string,  'base64')
 	let key = buffer.toString('ascii');
 	return jwt.sign(data, key,  options);
 }
 
 export function verifyJwt(token: string,  options: jwt.SignOptions) {
- 	const buffer = Buffer.from(process.env.ACCESS_TOKEN_PUBLIC_KEY as string,  'base64')
+ 	const buffer = Buffer.from(process.env.PUBLIC_KEY as string,  'base64')
 	let key = buffer.toString('ascii');
 	try {
 		const decoded: any = jwt.verify(token, key,  options, );

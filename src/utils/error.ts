@@ -15,10 +15,9 @@ const StatusCode = {
 	NOTFOUND: 404,
 	INTERNAL_SERVER_ERROR: 500
 }
-export const globalErrorHandler = (app: Express)  => {
+export const globalErrorHandler = (app: Express) => {
 	app.use((error: keyof typeof StatusCode | string, req: Request, res: Response, next: NextFunction) => {
-		console.log(error);
- 		const message = error.split('|');
+		const message = error.split('|');
 		res.status(+message[0]).send({message: message[1]});
 		next();
 	});
