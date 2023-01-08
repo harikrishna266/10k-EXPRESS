@@ -42,7 +42,6 @@ describe('User Login and Registration using mongo memory', () => {
 	})
 
 
-
  	describe('Should be able to login', () => {
 		it('When a valid username and password is given, it should return 200 ok and respond with access token and refresh token', async () => {
 			const test = await supertest(app).post('/v1/login', ).send({email: 'admin@gmail.com', password: '123123'}).expect(200);
