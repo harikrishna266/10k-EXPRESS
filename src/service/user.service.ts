@@ -23,7 +23,7 @@ export async function validatePassword({email, password}: { email: string, passw
 		}
 		return user;
 	} catch (e: any) {
-		throw new Error(e.message);
+		throw new InternalServerError()
 	}
 }
 
@@ -32,7 +32,7 @@ export async function getUserDetails(sessionId: mongoose.Types.ObjectId) {
 	try {
 		return UserModel.findById<HydratedDocument<IUser>>(sessionId).select(['name', 'email']);
 	} catch (e: any) {
-		throw new Error(e.message);
+		throw new InternalServerError()
 	}
 }
 
@@ -40,6 +40,6 @@ export async function getUserByEmail(email: String): Promise<number> {
 	try {
 		return UserModel.find({email}).count();
 	} catch (e: any) {
-		throw new Error(e.message);
+		throw new InternalServerError()
 	}
 }
