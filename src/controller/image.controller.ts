@@ -17,7 +17,6 @@ export async function addImage(req: Request, res: Response, next: NextFunction) 
 	}
 }
 
-
 export async function searchImage(req: Request, res: Response, next: NextFunction) {
 
 	try {

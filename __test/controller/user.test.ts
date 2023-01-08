@@ -1,13 +1,10 @@
-import {nextMock as next, reqMock as req, resMock as res} from "./reqMock";
-import * as UserSer from "../src/service/user.service";
-import * as UserCont from "../src/controller/user.controller";
-import {Conflict} from "../src/utils/error-handler/error.classes";
-jest.mock("../src/service/user.service");
+import {nextMock as next, reqMock as req, resMock as res} from "../reqMock";
+import * as UserSer from "../../src/service/user.service";
+import * as UserCont from "../../src/controller/user.controller";
+import {Conflict} from "../../src/utils/error-handler/error.classes";
 
 describe('User Controller methods', () => {
 
-	let createNewUser: any;
-	let userSerSpy: any;
 	let getUserByEmail: any;
 	beforeEach(() => {
 		jest.spyOn(res, 'status');

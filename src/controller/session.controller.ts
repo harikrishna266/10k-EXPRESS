@@ -5,19 +5,19 @@ import {signJwt, verifyJwt} from "../utils/jwt.util";
 import {ISessionDocument} from "../models/session.model";
 import  {HydratedDocument} from "mongoose";
 import {IUserDocument} from "../interfaces/user.interface";
+import {sendData, UnAuthorized} from "../utils/error-handler/error.classes";
 
 
 export async function login(req: Request<{}, { email: string, password: string }>, res: Response, next: NextFunction) {
 
 	try {
 		const user = await userSer.validatePassword(req.body) as HydratedDocument<IUserDocument>;
-
-		if (!user) {
-			return res.status(409).send({message: ['This user was not found']});
+ 		if (!user) {
+			return next(new UnAuthorized({message: 'Invalid email or password!'}))
 		}
 
-		const session = await sessionSer.createSession(user._id, req.get('user-agent') || '') as  HydratedDocument<ISessionDocument>;
-		const tokenInfo = {userId: user.id, session_id :session._id};
+		const session = await sessionSer.createSession(user.id, req.get('user-agent') || '') as  HydratedDocument<ISessionDocument>;
+		const tokenInfo = {userId: user.id, sessionId :session.id};
 		const accessToken = signJwt(tokenInfo,  {expiresIn: process.env.ACCESS_TOKEN_TTL, algorithm: 'RS256'});
 		const refreshToken = signJwt(tokenInfo,  {expiresIn: process.env.REFRESH_TOKEN_TTL, algorithm: 'RS256'});
 		return res.send({ accessToken, refreshToken });

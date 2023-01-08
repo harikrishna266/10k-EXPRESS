@@ -17,7 +17,6 @@ export async function createUser(req: Request, res: Response, next: NextFunction
 	}
 }
 
-
 export async function getUserDetails(req: Request, res: Response, next: NextFunction) {
 	try {
 		const user = await userSer.getUserDetails(res.locals.session.userId);
