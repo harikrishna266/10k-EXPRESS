@@ -2,7 +2,6 @@ import mongoose, {HydratedDocument, Schema} from "mongoose";
 import bcrypt from "bcrypt";
 import * as dotenv from "dotenv";
 import {IUser, IUserDocument} from "../interfaces/user.interface";
-import {omit} from "lodash";
 
 dotenv.config();
 

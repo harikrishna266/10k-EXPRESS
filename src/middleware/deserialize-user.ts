@@ -3,7 +3,6 @@ import {NextFunction, Request, Response} from "express";
 import * as SessionSer from '../service/session.service';
 import {verifyJwt} from "../utils/jwt.util";
 import {UnAuthorized} from "../utils/error-handler/error.classes";
-import {ISession, SessionModel} from "../models/session.model";
 
 export async function deserializeUser(req: Request, res: Response, next: NextFunction) {
 	const accessToken = (req.header('authorization') || '').replace(/Bearer\s/, "");
