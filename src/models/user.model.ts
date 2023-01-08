@@ -48,9 +48,7 @@ userSchema.methods.getUserById = async function (e: any) {
 	const user = this as IUserDocument;
 }
 
-userSchema.methods.getUserByEmail = async function (e: any) {
-	// const images = await UserModel.aggregate([
-}
+
 
 const UserModel = mongoose.model('User', userSchema);
 export default UserModel
