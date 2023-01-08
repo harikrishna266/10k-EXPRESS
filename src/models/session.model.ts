@@ -1,4 +1,4 @@
-import mongoose, {Schema} from "mongoose";
+import mongoose, {Schema, Types} from "mongoose";
 
 const SessionSchemaConfig = {
 	user: {type: mongoose.Schema.Types.ObjectId, ref : 'User'},

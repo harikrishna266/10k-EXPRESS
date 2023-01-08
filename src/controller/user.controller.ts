@@ -22,6 +22,6 @@ export async function getUserDetails(req: Request, res: Response, next: NextFunc
 		const user = await userSer.getUserDetails(res.locals.session.userId);
 		next(new sendData(user));
 	} catch (e: any) {
-		next(e.message);
+		next(new InternalServerError());
 	}
 }

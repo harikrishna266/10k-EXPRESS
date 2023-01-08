@@ -3,6 +3,7 @@ import {NextFunction, Request, Response} from "express";
 import {createImage} from "../service/image.service";
 import UserModel from "../models/user.model";
 import mongoose from "mongoose";
+import {InternalServerError, sendData} from "../utils/error-handler/error.classes";
 
 
 export async function addImage(req: Request, res: Response, next: NextFunction) {
@@ -13,7 +14,7 @@ export async function addImage(req: Request, res: Response, next: NextFunction) 
 		user.save();
 		res.status(200).send(image);
 	} catch (e: any) {
-		next('500| Internal server error');
+		return next(new InternalServerError())
 	}
 }
 
@@ -59,8 +60,8 @@ export async function searchImage(req: Request, res: Response, next: NextFunctio
 				}
 			}
 		]);
-		res.status(200).send(images[0]);
+		next(new sendData(images[0]))
 	} catch (e: any) {
-		next('409|Please try after some time')
+		return next(new InternalServerError())
 	}
 }

@@ -5,7 +5,7 @@ import {signJwt, verifyJwt} from "../utils/jwt.util";
 import {ISessionDocument} from "../models/session.model";
 import {HydratedDocument} from "mongoose";
 import {IUserDocument} from "../interfaces/user.interface";
-import {sendData, UnAuthorized} from "../utils/error-handler/error.classes";
+import {InternalServerError, sendData, UnAuthorized} from "../utils/error-handler/error.classes";
 
 
 export async function login(req: Request<{}, { email: string, password: string }>, res: Response, next: NextFunction) {
@@ -23,7 +23,7 @@ export async function login(req: Request<{}, { email: string, password: string }
 		return res.send({accessToken, refreshToken});
 
 	} catch (e: any) {
-		next(e.message);
+		return next(new InternalServerError())
 	}
 }
 
@@ -63,8 +63,9 @@ export async function deleteSession(req: Request<{}, { email: string, password: 
 		const session = await sessionSer.getSessionById(sessionId) as HydratedDocument<ISessionDocument>;
 		session.valid = false;
 		session.save();
+		return next(new sendData({message: 'You are logged out!'}));
 	} catch (e: any) {
-		next(e.meesage);
+		return next(new InternalServerError())
 	}
 }
 
