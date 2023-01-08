@@ -15,6 +15,7 @@ import multer from "multer";
 
 //Zod validators
 import {ZodUserLoginSchema, ZodUserRegisterSchema} from "../zod/user.schema";
+import {generateNewAccessToken} from "../controller/session.controller";
 
 const v1 = express()
 
@@ -25,7 +26,7 @@ const upload = multer({storage: storage, fileFilter: fileFilter})
 v1.post('/register', validator.validate(ZodUserRegisterSchema), userCont.createUser);
 v1.post('/login', validator.validate(ZodUserLoginSchema), sessionCont.login);
 
-v1.post('/refresh-token',  sessionCont.generateNewToken);
+v1.post('/refresh-token',  sessionCont.generateNewAccessToken);
 
 v1.use(de.deserializeUser);
 
