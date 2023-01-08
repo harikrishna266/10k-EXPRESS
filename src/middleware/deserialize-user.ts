@@ -16,7 +16,7 @@ export async function deserializeUser(req: Request, res: Response, next: NextFun
 	}
 
 	if (decoded) {
-		const sessionId = get(decoded, "session_id") as string;
+		const sessionId = get(decoded, "sessionId") as string;
 		const session = await SessionSer.getSessionById(sessionId)
 		if (session) {
 			res.locals.session = {userId: session.user, sessionId: session.id};
