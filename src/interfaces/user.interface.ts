@@ -1,6 +1,4 @@
-import mongoose from "mongoose";
-import {promises} from "dns";
-import {boolean} from "zod";
+
 
 export interface IUserDocument extends IUser {
  	isModified: () => boolean;
