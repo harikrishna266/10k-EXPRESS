@@ -1,4 +1,5 @@
 import ImageModel from "../models/image.model";
+import {InternalServerError} from "../utils/error-handler/error.classes";
 
 
 export async function createImage(image: any) {
@@ -8,7 +9,7 @@ export async function createImage(image: any) {
 			link: image.path
 		});
 	} catch (e: any) {
-		throw new Error('500|Internal Server error');
+		throw new InternalServerError()
 	}
 }
 

@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 import {InternalServerError, sendData} from "../utils/error-handler/error.classes";
 
 
-export async function addImage(req: Request, res: Response, next: NextFunction) {
+	export async function addImage(req: Request, res: Response, next: NextFunction) {
 	try {
 		const user: any = await UserModel.findById(res.locals.session.userId);
 		const image = await createImage(req.file);
