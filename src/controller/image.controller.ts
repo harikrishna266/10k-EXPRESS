@@ -59,10 +59,11 @@ export async function searchImage(req: Request, res: Response, next: NextFunctio
 			{
 				$facet: {
 					count: [{$count: "count"}],
-					images: [{$skip: +skip}, {$limit: +limit}, ]
+					images: [{$skip: +skip}, {$limit: +limit}]
 				}
 			}
 		]);
+		console.log(skip, limit);
 		next(new sendData(images[0]))
 	} catch (e: any) {
 		return next(new InternalServerError())
