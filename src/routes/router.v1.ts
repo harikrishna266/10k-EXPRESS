@@ -15,7 +15,6 @@ import multer from "multer";
 
 //Zod validators
 import {ZodUserLoginSchema, ZodUserRegisterSchema} from "../zod/user.schema";
-import {generateNewAccessToken} from "../controller/session.controller";
 
 const v1 = express()
 

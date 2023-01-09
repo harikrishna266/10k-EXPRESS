@@ -16,15 +16,14 @@ export default ImageModel
 
 export interface IImage {
 	name: string;
-
 	link: string;
 	valid: boolean;
 	userAgent: string;
 	password: string;
 }
+
 export interface IImageDocument extends IImage, mongoose.Document{
 	createdAt: Date;
 	updateAt: Date;
-
 }
 

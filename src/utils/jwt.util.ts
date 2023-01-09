@@ -13,7 +13,7 @@ export function verifyJwt(token: string,  options: jwt.SignOptions) {
  	const buffer = Buffer.from(process.env.PUBLIC_KEY as string,  'base64')
 	let key = buffer.toString('ascii');
 	try {
-		const decoded: any = jwt.verify(token, key,  options, );
+		const decoded: any = jwt.verify(token, key,  options);
 		return {
 			valid: true,
 			expired: false,

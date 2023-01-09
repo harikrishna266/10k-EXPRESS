@@ -44,6 +44,9 @@ export async function searchImage(req: Request, res: Response, next: NextFunctio
 							$match: {
 								name: {$regex: searchRgx, $options: 'i'}
 							}
+						},
+						{
+							'$sort': {  'createdAt': -1 }
 						}
 					]
 				}

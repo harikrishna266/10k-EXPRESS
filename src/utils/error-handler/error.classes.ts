@@ -40,6 +40,6 @@ export class sendData implements BaseError {
 	httpStatus: CODES = 'SUCCESS';
 	messages;
 	constructor(message : any) {
-		this.messages = {message};
+		this.messages = message;
 	}
 }

@@ -6,6 +6,7 @@ import {ISessionDocument} from "../models/session.model";
 import {HydratedDocument} from "mongoose";
 import {IUserDocument} from "../interfaces/user.interface";
 import {InternalServerError, sendData, UnAuthorized} from "../utils/error-handler/error.classes";
+import jwt from "jsonwebtoken";
 
 
 export async function login(req: Request<{}, { email: string, password: string }>, res: Response, next: NextFunction) {
@@ -35,6 +36,7 @@ export async function generateNewAccessToken(req: Request<{}, { email: string, p
 		}
 
 		const {valid, expired, decoded} = verifyJwt(refreshToken, {algorithm: 'RS256'});
+
 		if (!valid || expired) {
 			return next(new UnAuthorized())
 		}
@@ -43,9 +45,9 @@ export async function generateNewAccessToken(req: Request<{}, { email: string, p
 			const session = await sessionSer.getSessionById(decoded.sessionId) as HydratedDocument<ISessionDocument>; // check if the session id is valid and of so take the user.
 
 			if (decoded.userId.toString() === session.user.toString() && session.valid) {
-				const tokenInfo = {userId: decoded.userId.toString(), session_id: session.id.toString()};
+				const tokenInfo = {userId: decoded.userId.toString(), sessionId: session.id.toString()};
 
-				const options = {expiresIn: process.env.ACCESS_TOKEN_TTL};
+				const options:jwt.SignOptions = {expiresIn: process.env.ACCESS_TOKEN_TTL, algorithm: 'RS256'}
 
 				const accessToken = signJwt(tokenInfo, options);
 				return res.send({accessToken: accessToken}).status(200);
