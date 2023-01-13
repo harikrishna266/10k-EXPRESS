@@ -23,7 +23,7 @@ const upload = multer({storage: storage, fileFilter: fileFilter})
 
 
 v1.post('/register', validator.validate(ZodUserRegisterSchema), userCont.createUser);
-v1.post('/login', validator.validate(ZodUserLoginSchema), sessionCont.login);
+v1.post('/login',   sessionCont.login);
 
 v1.post('/refresh-token',  sessionCont.generateNewAccessToken);
 

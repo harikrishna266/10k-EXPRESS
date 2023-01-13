@@ -12,7 +12,7 @@ import jwt from "jsonwebtoken";
 export async function login(req: Request<{}, { email: string, password: string }>, res: Response, next: NextFunction) {
 
 	try {
-		const user = await userSer.validatePassword(req.body) as HydratedDocument<IUserDocument>;
+ 		const user = await userSer.validatePassword(req.body) as HydratedDocument<IUserDocument>;
 		if (!user) {
 			return next(new UnAuthorized({message: 'Invalid email or password!'}))
 		}
