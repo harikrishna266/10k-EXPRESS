@@ -7,6 +7,7 @@ import path from "path";
 import {addCors} from "./cors";
 import {addBodyParser} from "./bodyparser";
 import {globalErrorHandler} from "../middleware/error";
+import {addHelmet} from "./helmet";
 
 
 export function addHealthCheckApi(app: Express) {
@@ -34,7 +35,8 @@ export  const bootstrap = (): Bootstrap => {
 		startListening,
 		addCors,
 		addBodyParser,
-		globalErrorHandler
+		globalErrorHandler,
+		addHelmet
 	}
 }
 
@@ -46,5 +48,6 @@ export type Bootstrap  = {
 	startListening: (app: Express, log: () => void) => void;
 	addCors: (app: Express) => void;
 	addBodyParser: (app: Express) => void;
-	globalErrorHandler: (app: Express) => void
+	globalErrorHandler: (app: Express) => void,
+	addHelmet: (app: Express) => void,
 }
