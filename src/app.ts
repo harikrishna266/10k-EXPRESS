@@ -6,6 +6,7 @@ const {app, ...methods} = bootstrap();
 
 methods.setStaticDirectory(app);
 methods.addCors(app);
+methods.addHelmet(app);
 methods.addBodyParser(app);
 
 methods.connectDatabase().then(() => {
