@@ -63,7 +63,6 @@ export async function searchImage(req: Request, res: Response, next: NextFunctio
 				}
 			}
 		]);
-		console.log(skip, limit);
 		next(new sendData(images[0]))
 	} catch (e: any) {
 		return next(new InternalServerError())
