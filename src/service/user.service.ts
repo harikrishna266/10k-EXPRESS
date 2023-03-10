@@ -11,17 +11,17 @@ export async function createNewUser(user: any){
 	}
 }
 
-export async function validatePassword({email, password}: { email: string, password: string }) {
+export async function getUserByEmailOrPhoneNumber({email, phone}: { email: string, phone: string }): Promise<HydratedDocument<IUser>| null> {
 	try {
-		const user: any = await UserModel.findOne({email}).select(["id", 'password']);
-		if (!user) {
-			return false
-		}
-		const isPasswordValid = await user.comparePassword(password)
-		if (!isPasswordValid) {
-			return false;
-		}
-		return user;
+		return  UserModel.findOne({$or: [{email}, {phone}]});
+		// if (!user) {
+		// 	return false
+		// }
+		// const isPasswordValid = await user.comparePassword(password)
+		// if (!isPasswordValid) {
+		// 	return false;
+		// }
+		// return user;
 	} catch (e: any) {
 		throw new InternalServerError()
 	}
